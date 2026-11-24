@@ -2,6 +2,8 @@
 
 An Astro template for technical articles and project notes. It includes a responsive reading layout, light and dark themes, keyboard search, full-text RSS, and static metadata.
 
+[Moonlit Folio on GitHub](https://github.com/Ke1thLi/Moonlit-Folio)
+
 ## Run locally
 
 Use Node.js 24.22.1 and npm 11.19.1.
