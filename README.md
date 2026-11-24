@@ -1,44 +1,42 @@
-# Ke1thLi Blog
+# Moonlit Folio
 
-面向长期写作与技术项目展示的个人博客，采用 Linear × Editorial 设计方向。Phase 1 以个人博客正式上线为目标。实际使用并打磨后，再抽离通用 Astro 主题。
+An Astro template for technical articles and project notes. It includes a responsive reading layout, light and dark themes, keyboard search, full-text RSS, and static metadata.
 
-- [项目概述与 PRD](PRD.md)
-- [设计决策记录](Design-Decisions.md)
-- [设计规范](Design-Guidelines.md)
-- [技术架构](Architecture.md)
-- [内容模型](Content-Model.md)
-- [开源策略](Open-Source.md)
-- [开发路线图](Roadmap.md)
-- [测试与验收](Testing-and-Acceptance.md)
+[Moonlit Folio on GitHub](https://github.com/Ke1thLi/Moonlit-Folio)
 
-## 本地开发
+## Run locally
 
-维护人 Ke1thLi。使用 Node.js 24.22.1 和 npm 11.19.1。
+Use Node.js 24.22.1 and npm 11.19.1.
 
 ```sh
 npm ci
 npm run dev
+```
+
+Edit [site.config.mjs](site.config.mjs) to customize the site. Replace the sample articles and project in `src/content/` and edit the About page in `src/pages/about.astro`.
+
+```sh
 npm run check
-npm run test:content
-npm run test:routing
-npm test
 npm run format:check
+npm test
 npm run build
 npm run preview
 ```
 
-`npm run format` 格式化工程文件。静态构建产物位于 `dist/`。`BLOG_SITE_URL` 默认为占位地址 `https://example.invalid`。在 PowerShell 中设置 `$env:BLOG_BASE_PATH = "/Ke1thLi-Blog-Pages/"` 后，可用同一环境运行 `npm run build` 和 `npm run preview` 验证子路径。根路径使用 `/`。
+Preview the production build to try Pagefind or open `/search/?q=build`. The examples cover code, tables, inline and block math, a diagram, images, Chinese search, and related articles. Build output is in `dist/`.
 
-内容测试使用隔离的临时 Markdown 文件。文章 frontmatter 中的日期需加引号，例如 `pubDate: "2026-01-02"`，以便 schema 在 YAML 转换日期之前验证原始日期格式和有效性。项目 ID 取自 `src/content/projects/` 下的文件名，例如 `project-name.md` 对应 `project-name`。
+- [Configuration](docs/Configuration.md)
+- [Content guide](docs/Content-Guide.md)
+- [Getting started and hosting](docs/Getting-Started.md)
+- [Development and design](docs/Development-Guide.md)
+- [Third-party notices](docs/Third-Party-Notices.md)
 
-Markdown 图片可使用相对于源文件的本地路径，例如 `./diagram.svg`，由 Astro 生成包含部署前缀的资源 URL。
+## License
 
-运行 `npm run dev` 后可访问 `/design-system/` 检查排版和主题。设置部署前缀时，将同一前缀加到该路径前。预览路由仅由开发服务器注册。CSS tokens 位于 `src/styles/tokens.css`，容器在 `40rem` 增加页边距，预览在 `64rem` 切换为双栏。
+The original theme source, configuration, documentation, tests, two sample articles, one sample project, and three original SVGs are covered by the [MIT License](LICENSE).
 
-公共布局在 `56rem` 起显示桌面侧栏，较窄时使用抽屉。可用 `BLOG_GITHUB_URL` 配置 GitHub 的 HTTP(S) 地址，用 `BLOG_RSS_URL` 覆盖页脚默认的站内 `rss.xml`。站内 RSS 路径随 `BLOG_BASE_PATH` 生成。GitHub 未配置时，页脚显示名称。字体通过 Google Fonts 按需加载，并提供本地系统回退。
+Third-party dependencies and assets retain their upstream licenses. Keep the generated `third-party/` directory with any static site built from this template. [Third-party notices](docs/Third-Party-Notices.md)
 
-文章列表每页 10 篇。分类和标签筛选生成独立静态 URL，可直接分享。文章阅读时间为估算值。Markdown 图片的可选 title 用作独立图片的图注，围栏语言 `mermaid` 用于图表。
+## GitHub Template
 
-Pagefind 在 `npm run build` 的最后一步仅索引公开文章详情。用同一环境执行 `npm run preview` 测试搜索，`npm run dev` 不生成索引。RSS 和 Sitemap 使用 `BLOG_SITE_URL` 生成绝对 URL，正式发布前应设置实际站点地址。
-
-发布和内容录入步骤见 [GitHub Pages 双仓库发布](docs/Deployment.md) 和 [Obsidian 录入文章](docs/Obsidian-Writing.md)。
+Enable **Template repository** in the standalone repository settings and verify CI on its default branch before tagging `v0.1.0`. Users can customize their copy before deployment by following the [hosting guide](docs/Getting-Started.md). [GitHub template settings](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-template-repository)

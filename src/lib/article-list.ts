@@ -21,9 +21,21 @@ export function matches(post: Post, filter: ArticleFilter) {
     : post.data.tags.includes(filter.value);
 }
 
+export function groupByCategory(posts: Post[]) {
+  const groups = new Map<string, Post[]>();
+  for (const post of posts) {
+    const category = post.data.category;
+    if (!category) continue;
+    const entries = groups.get(category);
+    if (entries) entries.push(post);
+    else groups.set(category, [post]);
+  }
+  return groups;
+}
+
 export function articleFilters(posts: Post[]): ArticleFilter[] {
   return [
-    ...[...new Set(posts.map(({ data }) => data.category))]
+    ...[...groupByCategory(posts).keys()]
       .sort()
       .map((value) => ({ kind: "category" as const, value })),
     ...[...new Set(posts.flatMap(({ data }) => data.tags))]
@@ -32,9 +44,22 @@ export function articleFilters(posts: Post[]): ArticleFilter[] {
   ];
 }
 
-export function readingMinutes(body = "") {
-  const cjk = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu;
-  const characters = body.match(cjk)?.length ?? 0;
-  const words = body.replace(cjk, " ").match(/[\p{L}\p{N}]+/gu)?.length ?? 0;
-  return Math.max(1, Math.ceil(characters / 400 + words / 220));
+export function relatedPosts(current: Post, posts: Post[]): Post[] {
+  const tags = [...new Set(current.data.tags)];
+  return posts
+    .filter((post) => post.id !== current.id && !post.data.draft)
+    .map((post) => ({
+      post,
+      project: Number(current.data.projects.some((id) => post.data.projects.includes(id))),
+      tags: tags.filter((tag) => post.data.tags.includes(tag)).length,
+      category: Number(
+        Boolean(current.data.category) && current.data.category === post.data.category,
+      ),
+    }))
+    .filter(({ project, tags, category }) => project || tags || category)
+    .sort((a, b) => b.project - a.project || b.tags - a.tags || b.category - a.category)
+    .slice(0, 3)
+    .map(({ post }) => post);
 }
+
+export { readingMinutes } from "./reading-time";

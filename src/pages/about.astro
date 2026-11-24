@@ -3,14 +3,8 @@ import Page from "../layouts/Page.astro";
 import { siteConfig } from "../lib/site-config";
 ---
 
-<Page
-  title="About"
-  description="About Ke1thLi and this personal technology, security, and engineering blog."
-  reading
->
-  <p class="prose">
-    {siteConfig.author} writes about technology, security, and engineering and shares personal
-    projects here.
-  </p>
-  {siteConfig.githubUrl && <a href={siteConfig.githubUrl}>GitHub</a>}
+<Page title="About" description={siteConfig.description} reading>
+  <p>{siteConfig.description}</p>
+  <p>Written by {siteConfig.author}.</p>
+  {siteConfig.authorUrl && <a href={siteConfig.authorUrl}>Author website</a>}
 </Page>

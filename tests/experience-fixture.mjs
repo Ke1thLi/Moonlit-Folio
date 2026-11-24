@@ -29,10 +29,36 @@ A static route publishes an HTML document at a stable address. This fixture chec
 
 The indexable body keyword is quartzanchor. Open the [related section](#verify-the-output) after comparing the listing.
 
+The equation $x^2$ and the text before\u0007after exercise the feed renderer.
+
+<script type="application/json">"page-only-marker"</script>
+
+1. Ordered feed item
+2. Another ordered item
+
+- Unordered feed item
+- [x] Completed feed task
+- [ ] Pending feed task
+
+- [x] Loose feed task
+
+  This explanation remains under the task.
+
+<article>
+  <p>Visible editorial content &amp; notes.</p>
+  <picture>
+    <source media="(min-width: 640px)" srcset="../../favicon.svg?variant=wide 1x, ../../favicon.svg?variant=wide-2x 2x">
+    <source srcset="javascript:feed-blocked 2x">
+    <img src="../../favicon.svg?variant=fallback" alt="Feed fallback" onload="">
+  </picture>
+  <a href="javascript:feed-blocked" onclick="">Unsafe URL label</a>
+  <iframe src="about:blank" title="Feed-omitted frame"></iframe>
+</article>
+
 #### Render a code example
 
 ${fence}ts
-const route = "/Ke1thLi-Blog/posts/custom-slug/";
+const route = "/moonlit-folio/posts/custom-slug/";
 const longLine = "${"long-line-".repeat(21)}";
 ${fence}
 
@@ -43,7 +69,7 @@ ${fence}
 | Mode | Prefix |
 | --- | --- |
 | Root | / |
-| Project | /Ke1thLi-Blog/ |
+| Project | /moonlit-folio/ |
 
 ![Fixture image](./assets/fixture.svg "Static route verification image")
 
@@ -59,7 +85,7 @@ export async function createExperienceFixture(root) {
     recursive: true,
     filter: (source) => source !== join(root, "src", "content"),
   });
-  for (const name of ["package.json", "tsconfig.json", "astro.config.mjs"]) {
+  for (const name of ["package.json", "tsconfig.json", "astro.config.mjs", "site.config.mjs"]) {
     await cp(join(root, name), join(directory, name));
   }
   await cp(join(root, "public"), join(directory, "public"), { recursive: true });
@@ -67,6 +93,13 @@ export async function createExperienceFixture(root) {
   await mkdir(join(directory, "src/content/posts/assets"));
   await mkdir(join(directory, "src/content/projects"), { recursive: true });
   await write("src/content/posts/different-filename.md", mainPost);
+  await mkdir(join(directory, "src/content/posts/_local-drafts"));
+  await write(
+    "src/content/posts/_local-drafts/same-slug.md",
+    mainPost
+      .replace("featured: true", "draft: true")
+      .replace("quartzanchor", "localdraftonlymarker"),
+  );
   await write(
     "src/content/posts/draft.md",
     mainPost
@@ -85,10 +118,11 @@ title: Article fixture ${key}
 description: Fixture for publication ordering and static pagination.
 slug: fixture-${key}
 pubDate: "2026-01-${key}"
-category: ${index <= 5 ? "topic" : "engineering"}
+${index === 10 ? "" : `category: ${index <= 5 ? "topic" : "engineering"}`}
 type: fixture
 tags: [${index <= 5 ? "astro" : "build"}]
 featured: ${index === 3}
+${index === 3 ? "projects: [project-id]" : ""}
 ${index === 1 ? "lang: zh-CN" : ""}
 ---
 

@@ -1,0 +1,58 @@
+---
+import { siteConfig } from "../lib/site-config";
+---
+
+<header class="hero">
+  {siteConfig.backgroundUrl && (
+    <img src={siteConfig.backgroundUrl} alt="" width="960" height="480" fetchpriority="high" />
+  )}
+  <div>
+    <h1>{siteConfig.title}</h1>
+    <p>{siteConfig.home.introduction}</p>
+    {siteConfig.home.technicalFocus && <p>{siteConfig.home.technicalFocus}</p>}
+  </div>
+</header>
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    align-items: end;
+    min-height: clamp(15rem, 35vw, 24rem);
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(circle at 77% 28%, #fff3d7 0 5%, #c6bee7 5.2% 7%, transparent 7.3%),
+      linear-gradient(163deg, transparent 55%, #50466b 55.2% 67%, transparent 67.2%),
+      linear-gradient(202deg, #2e2b48 32%, #655c80);
+    color: #fff;
+  }
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+  .hero::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: linear-gradient(0deg, #151329 0%, transparent 90%);
+    z-index: -1;
+  }
+  .hero > div {
+    padding: clamp(1rem, 5vw, 3rem);
+  }
+  h1 {
+    font-family: Georgia, serif;
+    font-size: var(--text-hero-h1);
+    color: inherit;
+    margin: 0;
+  }
+  p {
+    margin: 0.6rem 0 0;
+    max-width: 48ch;
+  }
+</style>
