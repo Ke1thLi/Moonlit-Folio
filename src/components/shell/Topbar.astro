@@ -1,0 +1,110 @@
+---
+import { siteConfig } from "../../lib/site-config";
+import Icon from "./Icon.astro";
+import { sitePath } from "../../lib/routes";
+
+interface Props {
+  title: string;
+  lang: string;
+  section?: { label: string; href: string };
+}
+
+const { title, section } = Astro.props;
+const home = Astro.url.pathname === sitePath();
+---
+
+<header class="shell-topbar" lang="en">
+  <div class="topbar-start">
+    <button
+      class="shell-icon mobile-toggle"
+      type="button"
+      data-drawer-open
+      aria-label="Open navigation"
+      aria-controls="navigation-drawer"
+      aria-haspopup="dialog"
+    >
+      <Icon name="panel" />
+    </button>
+    {!home && (
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          <li>
+            <a href={sitePath()}>Home</a>
+          </li>
+          {section && (
+            <li>
+              <a href={section.href}>{section.label}</a>
+            </li>
+          )}
+          <li aria-current="page" lang={Astro.props.lang}>
+            {title}
+          </li>
+        </ol>
+      </nav>
+    )}
+  </div>
+  <div class="topbar-actions">
+    <div class="topbar-social">
+      {siteConfig.rssUrl && (
+        <a class="shell-icon" href={siteConfig.rssUrl} aria-label="RSS" title="RSS">
+          <Icon name="rss" />
+        </a>
+      )}
+      {siteConfig.githubUrl && (
+        <a
+          class="shell-icon github-link"
+          href={siteConfig.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub profile (opens in a new tab)"
+          title="GitHub profile"
+        >
+          GitHub
+        </a>
+      )}
+    </div>
+    {siteConfig.features.search && (
+      <div class="search-trigger-wrap">
+        <button
+          class="shell-icon search-trigger"
+          type="button"
+          data-search-open
+          aria-controls="article-search"
+          aria-haspopup="dialog"
+          aria-keyshortcuts="Control+K Meta+K"
+        >
+          <Icon name="search" />
+          <span>Search articles...</span>
+        </button>
+        <kbd aria-hidden="true">Ctrl K</kbd>
+      </div>
+    )}
+    <button
+      class="shell-icon"
+      type="button"
+      data-theme-toggle
+      aria-label="Dark theme"
+      aria-pressed="false"
+    >
+      <Icon name="moon" />
+    </button>
+    <button
+      class="shell-icon theme-reset"
+      type="button"
+      data-theme-reset
+      aria-label="Follow system theme"
+      title="Follow system theme"
+      hidden
+    >
+      <Icon name="system" />
+    </button>
+  </div>
+</header>
+
+<style>
+  .github-link {
+    inline-size: auto;
+    padding-inline: var(--space-2);
+    font-size: var(--text-sm);
+  }
+</style>

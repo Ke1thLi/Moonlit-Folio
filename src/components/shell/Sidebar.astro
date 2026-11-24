@@ -1,0 +1,53 @@
+---
+import { sitePath } from "../../lib/routes";
+import Icon from "./Icon.astro";
+
+import { siteConfig } from "../../lib/site-config";
+const groups = siteConfig.navigation;
+
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+const pathname = Astro.url.pathname;
+const active = (href: string) =>
+  href === pathname
+    ? "page"
+    : (href !== sitePath() && href.startsWith("/") && pathname.startsWith(href)) ||
+        (href === sitePath("articles") && pathname.startsWith(sitePath("posts")))
+      ? "location"
+      : undefined;
+---
+
+<nav class:list={["side-nav", { "side-nav-compact": compact }]} aria-label="Main navigation">
+  {groups.map(({ label: group, links }) => {
+    const items = links.map(({ label, icon, href }) => {
+      return (
+        <a
+          href={href}
+          aria-current={active(href)}
+          aria-label={label}
+          title={compact ? label : undefined}
+        >
+          {icon ? (
+            <Icon name={icon} />
+          ) : (
+            compact && <span aria-hidden="true">{label.slice(0, 1)}</span>
+          )}
+          {!compact && <span>{label}</span>}
+        </a>
+      );
+    });
+    return compact ? (
+      <div>{items}</div>
+    ) : (
+      <details data-nav-group={group} open>
+        <summary>
+          {group}
+          <Icon name="chevron" />
+        </summary>
+        {items}
+      </details>
+    );
+  })}
+</nav>

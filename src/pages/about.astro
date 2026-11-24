@@ -1,0 +1,10 @@
+---
+import Page from "../layouts/Page.astro";
+import { siteConfig } from "../lib/site-config";
+---
+
+<Page title="About" description={siteConfig.description} reading>
+  <p>{siteConfig.description}</p>
+  <p>Written by {siteConfig.author}.</p>
+  {siteConfig.authorUrl && <a href={siteConfig.authorUrl}>Author website</a>}
+</Page>

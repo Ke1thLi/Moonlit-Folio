@@ -1,0 +1,46 @@
+---
+import { siteConfig } from "../lib/site-config";
+import { preferenceKey } from "../lib/preferences";
+const { defaultTheme } = siteConfig.appearance;
+const themeKey = preferenceKey("theme");
+---
+
+<script is:inline define:vars={{ defaultTheme, themeKey }}>
+  (() => {
+    const root = document.documentElement;
+    const system = matchMedia("(prefers-color-scheme: dark)");
+    let mode = defaultTheme;
+    try {
+      const saved = localStorage.getItem(themeKey);
+      if (saved === "dark" || saved === "light" || saved === "system") mode = saved;
+    } catch {}
+    root.dataset.theme = mode;
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggle = document.querySelector("[data-theme-toggle]");
+      const reset = document.querySelector("[data-theme-reset]");
+      const dark = () => mode === "dark" || (mode === "system" && system.matches);
+      const update = () => {
+        root.dataset.theme = mode;
+        toggle?.setAttribute("aria-pressed", String(dark()));
+        if (reset) reset.hidden = mode === "system";
+      };
+      toggle?.addEventListener("click", () => {
+        mode = dark() ? "light" : "dark";
+        try {
+          localStorage.setItem(themeKey, mode);
+        } catch {}
+        update();
+      });
+      reset?.addEventListener("click", () => {
+        mode = "system";
+        try {
+          localStorage.setItem(themeKey, mode);
+        } catch {}
+        update();
+        toggle?.focus();
+      });
+      system.addEventListener("change", update);
+      update();
+    });
+  })();
+</script>

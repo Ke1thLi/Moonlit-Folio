@@ -1,0 +1,25 @@
+---
+import TaxonomyAccordion from "../../components/TaxonomyAccordion.astro";
+import Page from "../../layouts/Page.astro";
+import { groupByCategory } from "../../lib/article-list";
+import { getPublicPosts } from "../../lib/public-content";
+import { sitePath } from "../../lib/routes";
+
+const categories = [...groupByCategory(await getPublicPosts())].sort(([a], [b]) =>
+  a.localeCompare(b),
+);
+---
+
+<Page title="Categories" description="Browse technical articles by category." reading>
+  {categories.length === 0 ? (
+    <p class="muted">Categories will appear as articles are published.</p>
+  ) : (
+    <TaxonomyAccordion
+      groups={categories.map(([label, posts]) => ({
+        label,
+        href: sitePath("categories", label),
+        posts,
+      }))}
+    />
+  )}
+</Page>

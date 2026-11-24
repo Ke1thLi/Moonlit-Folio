@@ -1,0 +1,14 @@
+---
+import { siteConfig } from "../lib/site-config";
+
+const fonts =
+  "https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400..600&family=Noto+Sans+SC:wght@400..700&display=swap";
+---
+
+{siteConfig.appearance.fontSource === "google" && (
+  <>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link rel="stylesheet" href={fonts} />
+  </>
+)}

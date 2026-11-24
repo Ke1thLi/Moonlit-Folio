@@ -1,0 +1,19 @@
+---
+import { siteConfig } from "../../lib/site-config";
+
+interface Props {
+  readingTime?: number;
+}
+const { readingTime } = Astro.props;
+---
+
+<footer class="shell-footer">
+  <div class="footer-identity">
+    <strong>{siteConfig.title}</strong>
+    <span class="footer-detail">{siteConfig.description}</span>
+    <span class="footer-detail">
+      © {new Date().getUTCFullYear()} {siteConfig.author}
+    </span>
+  </div>
+  {readingTime !== undefined && <span>{readingTime} min read</span>}
+</footer>
